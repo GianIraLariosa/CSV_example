@@ -7,10 +7,13 @@ import numpy as np
 
 
 pd.options.display.max_rows = 10
-pd.options.display.float_format = "{:.1f}".format
+# pd.options.display.float_format = "{:.1f}".format
 
 training_df = pd.read_csv('CarPricesPrediction.csv')
-#training_df["median_house_value"] /= 1000.0
+# training_df["Mileage"] /= 1000.0
+# training_df["Price"] /= 1000.0
+
+training_df['time'] = training_df['Year'] - 2009
 
 # @title Define the functions that build and train a model
 def build_model(my_learning_rate):
@@ -66,28 +69,33 @@ def plot_the_model(trained_weight, trained_bias, feature, label):
 
   # Label the axes.
 
-  plt.ylabel(feature)
-  plt.xlabel(label)
-  plt.ylim(10000, 35000)
-  plt.xlim(2010, 2022)
+  plt.xlabel(feature)
+  plt.ylabel(label)
+  # plt.xlim(0, 15)
+  # plt.ylim(0, 35)
 
   # Create a scatter plot from 200 random points of the dataset.
   random_examples = training_df.sample(n=200)
-  price = np.array(random_examples[feature], dtype=int)
+  price = np.array(random_examples[feature], dtype=float)
   year = np.array(random_examples[label], dtype=int)
-  plt.scatter(year, price)
+  plt.scatter(price, year)
 
   # Create a red line representing the model. The red line starts
   # at coordinates (x0, y0) and ends at coordinates (x1, y1).
-  x0 = 2010
+  x0 = 0
   y0 = trained_bias[0]
-  x1 = random_examples[feature].max()
-  y1 = trained_bias + (trained_weight * x1)
+  x1 = (random_examples[feature].max())
+  y1 = (trained_bias + (trained_weight * x1))
 
   # # Extract scalar value from y1 if it's in the form of an array
-  if isinstance(y1, np.ndarray):
-      y1 = y1[0][0]
-
+  # if isinstance(y1, np.ndarray):
+  y1 = y1[0][0]
+  #
+  # if x1 > random_examples[feature].max():
+  #     x1 = random_examples[feature].max()
+  #
+  # if y1 > random_examples[label].max():
+  #     y1 = random_examples[label].max()
 
   print("x0:", x0)
   print("y0:", y0)
@@ -115,7 +123,7 @@ def plot_the_loss_curve(epochs, rmse):
 def predict_house_values(n, feature, label, my_model):
   """Predict house values based on a feature."""
 
-  batch = training_df[feature][10000:10000 + n]
+  batch = training_df[feature][989:989 + n]
   predicted_values = my_model.predict_on_batch(x=batch)
 
   print("feature   label          predicted")
@@ -123,6 +131,6 @@ def predict_house_values(n, feature, label, my_model):
   print("          in thousand$   in thousand$")
   print("--------------------------------------")
   for i in range(n):
-    print ("%5.0f %6.0f %15.0f" % (training_df[feature][10000 + i],
-                                   training_df[label][10000 + i],
+    print ((training_df[feature][989 + i],
+                                   training_df[label][989 + i],
                                    predicted_values[i][0] ))
