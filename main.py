@@ -5,10 +5,10 @@ pd.options.display.max_rows = 10
 pd.options.display.float_format = "{:.1f}".format
 
 # Import the dataset.
-training_df = pd.read_csv(filepath_or_buffer="https://download.mlcc.google.com/mledu-datasets/california_housing_train.csv")
+training_df = pd.read_csv("CarPricesPrediction.csv")
 
 # Scale the label.
-training_df["median_house_value"] /= 1000.0
+#training_df["median_house_value"] /= 1000.0
 
 # Print the first rows of the pandas DataFrame.
 print(training_df)
@@ -28,8 +28,8 @@ epochs = 30
 batch_size = 30
 
 # Specify the feature and the label.a
-my_feature = "total_rooms"  # the total number of rooms on a specific city block.
-my_label="median_house_value" # the median value of a house on a specific city block.
+my_feature = "Mileage"  # the total number of rooms on a specific city block.
+my_label="Year" # the median value of a house on a specific city block.
 # That is, you're going to create a model that predicts house value based
 # solely on total_rooms.
 

@@ -1,3 +1,5 @@
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 import tensorflow as tf
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -7,8 +9,8 @@ import numpy as np
 pd.options.display.max_rows = 10
 pd.options.display.float_format = "{:.1f}".format
 
-training_df = pd.read_csv(filepath_or_buffer="https://download.mlcc.google.com/mledu-datasets/california_housing_train.csv")
-training_df["median_house_value"] /= 1000.0
+training_df = pd.read_csv('CarPricesPrediction.csv')
+#training_df["median_house_value"] /= 1000.0
 
 # @title Define the functions that build and train a model
 def build_model(my_learning_rate):
@@ -63,16 +65,21 @@ def plot_the_model(trained_weight, trained_bias, feature, label):
   """Plot the trained model against 200 random training examples."""
 
   # Label the axes.
-  plt.xlabel(feature)
-  plt.ylabel(label)
+
+  plt.ylabel(feature)
+  plt.xlabel(label)
+  plt.ylim(10000, 35000)
+  plt.xlim(2010, 2022)
 
   # Create a scatter plot from 200 random points of the dataset.
   random_examples = training_df.sample(n=200)
-  plt.scatter(random_examples[feature], random_examples[label])
+  price = np.array(random_examples[feature], dtype=int)
+  year = np.array(random_examples[label], dtype=int)
+  plt.scatter(year, price)
 
   # Create a red line representing the model. The red line starts
   # at coordinates (x0, y0) and ends at coordinates (x1, y1).
-  x0 = 0
+  x0 = 2010
   y0 = trained_bias[0]
   x1 = random_examples[feature].max()
   y1 = trained_bias + (trained_weight * x1)
